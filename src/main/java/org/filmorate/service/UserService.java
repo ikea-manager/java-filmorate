@@ -43,7 +43,7 @@ public class UserService {
     }
 
     public List<User> getFriends(Long id){
-        return this.getById(id).getFriends().stream().map(this::getById).toList();
+        return this.getById(id).getFriends().stream().map(this::getById).collect(Collectors.toList());
     }
 
     public Set<User> findCommonFriends(Long id, Long otherId){
