@@ -24,7 +24,7 @@ public class FilmControllerTest {
         film.setName("Название");
         film.setDescription("Описание");
         film.setReleaseDate(LocalDate.of(1990,1,1));
-        film.setDuration(Duration.ofHours(2));
+        film.setDuration(120L);
     }
 
     @Test
@@ -67,7 +67,7 @@ public class FilmControllerTest {
 
     @Test
     public void validationFilmPutTest_ValidationException_DurationPositive() throws ValidationException {
-        film.setDuration(Duration.ofHours(-2));
+        film.setDuration(-120L);
         Exception exception = assertThrows(ValidationException.class, () -> {
             filmController.post(film);
         });
