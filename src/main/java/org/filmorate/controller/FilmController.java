@@ -3,11 +3,9 @@ package org.filmorate.controller;
 import lombok.extern.slf4j.Slf4j;
 import org.filmorate.exceptions.ValidationException;
 import org.filmorate.model.Film;
-import org.filmorate.service.FilmService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.Duration;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -15,27 +13,19 @@ import java.util.List;
 @RestController
 @RequestMapping("/films")
 public class FilmController {
-
-    private final FilmService filmService;
-
-    public FilmController(@Autowired FilmService filmService) {
-        this.filmService = filmService;
-    }
-
     private static final int MAX_DESCRIPTION_LENGTH = 200;
     private static final LocalDate MIN_RELEASE_DATE = LocalDate.of(1895, 12, 28);
     @GetMapping
     @ResponseBody
-    public List<Film> getAll() {
-        log.info("/films get all");
-        return filmService.getAll();
-    }
-
-    @GetMapping("/{id}")
-    @ResponseBody
-    public Film get(@PathVariable Long id) {
-        log.info("/films get by id");
-        return filmService.getById(id);
+    public List<Film> get() {
+        log.info("/films get");
+        Film film = new Film();
+        film.setId(1);
+        film.setName("Название");
+        film.setDescription("Описание");
+        film.setReleaseDate(LocalDate.of(1990,1,1));
+        film.setDuration(Duration.ofHours(2));
+        return List.of(film);
     }
 
     @PostMapping
@@ -43,66 +33,32 @@ public class FilmController {
     public Film post(@RequestBody Film film) throws ValidationException {
         log.info("/films post");
         this.validate(film);
-        return filmService.add(film);
+        return film;
     }
 
-    @PutMapping
+    @PatchMapping
     @ResponseBody
-    public Film put(@RequestBody Film film) throws ValidationException {
+    public Film patch(@RequestBody Film film) {
         log.info("/films patch");
-        this.validate(film);
-        return filmService.update(film);
-    }
-
-    @PutMapping("/{id}/like/{userId}")
-    @ResponseStatus(HttpStatus.OK)
-    public void like(@PathVariable Long id, @PathVariable Long userId) throws ValidationException {
-        log.info("/films like");
-        filmService.addLike(id, userId);
-    }
-
-    @DeleteMapping("/{id}/like/{userId}")
-    @ResponseStatus(HttpStatus.OK)
-    public void removeLike(@PathVariable Long id, @PathVariable Long userId) throws ValidationException {
-        log.info("/films remove like");
-        filmService.removeLike(id, userId);
-    }
-
-    @GetMapping("/popular?count={count}")
-    @ResponseBody
-    public List<Film> getTop(@PathVariable Integer count) {
-        log.info("/films get top");
-        return filmService.getTopNFilms(count);
+        return film;
     }
 
     private void validate(Film film) throws ValidationException {
-        if (film.getName()==null||film.getName().isEmpty()) {
+        if (film.getName().isEmpty()) {
             log.error("Name не может быть пустым");
             throw new ValidationException("Name не может быть пустым");
         }
-        if (film.getDescription()!=null && film.getDescription().length()>MAX_DESCRIPTION_LENGTH) {
+        if (film.getDescription().length()>MAX_DESCRIPTION_LENGTH) {
             log.error("Максимальная длина описания — 200 символов");
             throw new ValidationException("Максимальная длина описания — 200 символов");
         }
-        if (film.getReleaseDate()!=null && film.getReleaseDate().isBefore(MIN_RELEASE_DATE)){
+        if (film.getReleaseDate().isBefore(MIN_RELEASE_DATE)){
             log.error("Дата релиза должна быть не раньше 28 декабря 1895 года");
             throw new ValidationException("Дата релиза должна быть не раньше 28 декабря 1895 года");
         }
-        if (film.getDuration()!=null && film.getDuration().isNegative()) {
+        if (film.getDuration().isNegative()) {
             log.error("Продолжительность фильма должна быть положительной");
             throw new ValidationException("Продолжительность фильма должна быть положительной");
         }
-    }
-
-    @ExceptionHandler(ValidationException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public String handleValidationException(ValidationException e) {
-        return e.getMessage();
-    }
-
-    @ExceptionHandler(Exception.class)
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public String handleException(Exception e) {
-        return e.getMessage();
     }
 }
