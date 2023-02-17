@@ -32,9 +32,8 @@ public class UserController {
         return userService.getAll();
     }
 
-    @GetMapping
+    @GetMapping("/{id}")
     @ResponseBody
-    @RequestMapping("/{id}")
     public User get(@PathVariable Long id) {
         log.info("/users get by id");
         return userService.getById(id);
@@ -56,32 +55,28 @@ public class UserController {
         return userService.update(user);
     }
 
-    @PutMapping
-    @RequestMapping("/{id}/friends/{friendId}")
+    @PutMapping("/{id}/friends/{friendId}")
     @ResponseStatus(HttpStatus.OK)
     public void addToFriends(@PathVariable Long id, @PathVariable Long friendId) {
         log.info("/users add to friends");
         userService.addToFriends(id, friendId);
     }
 
-    @DeleteMapping
-    @RequestMapping("/{id}/friends/{friendId}")
+    @DeleteMapping("/{id}/friends/{friendId}")
     @ResponseStatus(HttpStatus.OK)
     public void removeFromFriends(@PathVariable Long id, @PathVariable Long friendId) {
         log.info("/users remove from friends");
         userService.removeFromFriends(id, friendId);
     }
 
-    @GetMapping
+    @GetMapping("/{id}/friends")
     @ResponseBody
-    @RequestMapping("/{id}/friends")
     public List<User> getFriends(@PathVariable Long id) {
         log.info("/users get friends");
         return userService.getFriends(id);
     }
 
-    @GetMapping
-    @RequestMapping("/{id}/friends/common/{otherId}")
+    @GetMapping("/{id}/friends/common/{otherId}")
     @ResponseBody
     public Set<User> getCommonFriends(@PathVariable Long id, @PathVariable Long otherId) {
         log.info("/users get common friends");

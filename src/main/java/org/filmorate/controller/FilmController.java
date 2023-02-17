@@ -31,9 +31,8 @@ public class FilmController {
         return filmService.getAll();
     }
 
-    @GetMapping
+    @GetMapping("/{id}")
     @ResponseBody
-    @RequestMapping("/{id}")
     public Film get(@PathVariable Long id) {
         log.info("/films get by id");
         return filmService.getById(id);
@@ -55,25 +54,22 @@ public class FilmController {
         return filmService.update(film);
     }
 
-    @PutMapping
-    @RequestMapping("/{id}/like/{userId}")
+    @PutMapping("/{id}/like/{userId}")
     @ResponseStatus(HttpStatus.OK)
     public void like(@PathVariable Long id, @PathVariable Long userId) throws ValidationException {
         log.info("/films like");
         filmService.addLike(id, userId);
     }
 
-    @DeleteMapping
-    @RequestMapping("/{id}/like/{userId}")
+    @DeleteMapping("/{id}/like/{userId}")
     @ResponseStatus(HttpStatus.OK)
     public void removeLike(@PathVariable Long id, @PathVariable Long userId) throws ValidationException {
         log.info("/films remove like");
         filmService.removeLike(id, userId);
     }
 
-    @GetMapping
+    @GetMapping("/popular?count={count}")
     @ResponseBody
-    @RequestMapping("/popular?count={count}")
     public List<Film> getTop(@PathVariable Integer count) {
         log.info("/films get top");
         return filmService.getTopNFilms(count);
