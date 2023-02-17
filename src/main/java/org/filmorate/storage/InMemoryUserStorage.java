@@ -1,9 +1,9 @@
 package org.filmorate.storage;
 
+import org.filmorate.exceptions.NotFoundException;
 import org.filmorate.model.User;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,7 +17,9 @@ public class InMemoryUserStorage implements UserStorage{
 
     @Override
     public User findById(Long id) {
-        return users.stream().filter(user->user.getId()==id).findFirst().orElse(null);
+        User usr = users.stream().filter(user->user.getId()==id).findFirst().orElse(null);
+        if(usr==null) throw new NotFoundException("User not found");
+        return usr;
     }
 
     @Override
@@ -28,10 +30,8 @@ public class InMemoryUserStorage implements UserStorage{
     }
 
     @Override
-    public User update(User user) throws Exception {
-        User findUser = findById(user.getId());
-        if(findUser==null) throw new Exception("User not found");
-        users.remove(findUser);
+    public User update(User user) {
+        users.remove(findById(user.getId()));
         users.add(user);
         return user;
     }

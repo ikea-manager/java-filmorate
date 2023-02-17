@@ -1,31 +1,23 @@
 package org.filmorate.controller;
 
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.filmorate.exceptions.ValidationException;
-import org.filmorate.model.ErrorResponse;
 import org.filmorate.model.User;
 import org.filmorate.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
 
 @Slf4j
 @RestController
 @RequestMapping("/users")
+@AllArgsConstructor
 public class UserController {
 
     private final UserService userService;
 
-    public UserController(@Autowired UserService userService) {
-        this.userService = userService;
-    }
-
-    private static final String SPACE = " ";
-    private static final String AT = "@";
     @GetMapping
     @ResponseBody
     public List<User> getAll() {
@@ -42,17 +34,15 @@ public class UserController {
 
     @PostMapping
     @ResponseBody
-    public User post(@RequestBody User user) throws ValidationException {
+    public User post(@RequestBody User user) {
         log.info("/users post");
-        this.validate(user);
         return userService.add(user);
     }
 
     @PutMapping
     @ResponseBody
-    public User put(@RequestBody User user) throws Exception {
+    public User put(@RequestBody User user) {
         log.info("/users patch");
-        this.validate(user);
         return userService.update(user);
     }
 
@@ -82,41 +72,5 @@ public class UserController {
     public Set<User> getCommonFriends(@PathVariable Long id, @PathVariable Long otherId) {
         log.info("/users get common friends");
         return userService.findCommonFriends(id, otherId);
-    }
-
-    private void validate(User user) throws ValidationException {
-        if (user.getEmail()==null||user.getEmail().isEmpty()) {
-            log.error("Email не может быть пустым");
-            throw new ValidationException("Email не может быть пустым");
-        }
-        if (!user.getEmail().contains(AT)) {
-            log.error("Email должен содержать символ @");
-            throw new ValidationException("Email должен содержать символ @");
-        }
-        if (user.getLogin()==null||user.getLogin().isEmpty()) {
-            log.error("Login не может быть пустым");
-            throw new ValidationException("Login не может быть пустым");
-        }
-        if (user.getLogin().contains(SPACE)) {
-            log.error("Login не может содержать пробелы");
-            throw new ValidationException("Login не может содержать пробелы");
-        }
-        if (user.getName()==null||user.getName().isEmpty()) user.setName(user.getLogin());
-        if (user.getBirthday()!=null && user.getBirthday().isAfter(LocalDate.now())) {
-            log.error("Birthday не может быть в будущем");
-            throw new ValidationException("Birthday не может быть в будущем");
-        }
-    }
-
-    @ExceptionHandler(ValidationException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse handleValidationException(ValidationException e) {
-        return new ErrorResponse(e.getMessage());
-    }
-
-    @ExceptionHandler(Exception.class)
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ErrorResponse handleException(Exception e) {
-        return new ErrorResponse(e.getMessage());
     }
 }

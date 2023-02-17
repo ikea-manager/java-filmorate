@@ -1,10 +1,9 @@
 package org.filmorate.storage;
 
+import org.filmorate.exceptions.NotFoundException;
 import org.filmorate.model.Film;
 import org.springframework.stereotype.Component;
 
-import java.time.Duration;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,7 +17,9 @@ public class InMemoryFilmStorage implements FilmStorage{
 
     @Override
     public Film findById(Long id) {
-        return films.stream().filter(film->film.getId()==id).findFirst().orElse(null);
+        Film flm = films.stream().filter(film->film.getId()==id).findFirst().orElse(null);
+        if(flm==null) throw new NotFoundException("Film not found");
+        return flm;
     }
 
     @Override
@@ -29,10 +30,8 @@ public class InMemoryFilmStorage implements FilmStorage{
     }
 
     @Override
-    public Film update(Film film) throws Exception {
-        Film findFilm = this.findById(film.getId());
-        if(findFilm==null) throw new Exception("Film not found");
-        films.remove(findFilm);
+    public Film update(Film film) {
+        films.remove(this.findById(film.getId()));
         films.add(film);
         return film;
     }

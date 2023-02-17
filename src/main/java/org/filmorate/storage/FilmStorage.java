@@ -8,5 +8,5 @@ public interface FilmStorage {
     List<Film> findAll();
     Film findById(Long id);
     Film insert(Film film);
-    Film update(Film film) throws Exception;
+    Film update(Film film);
 }
