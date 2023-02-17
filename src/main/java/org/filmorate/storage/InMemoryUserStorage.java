@@ -28,8 +28,10 @@ public class InMemoryUserStorage implements UserStorage{
     }
 
     @Override
-    public User update(User user) {
-        users.remove(findById(user.getId()));
+    public User update(User user) throws Exception {
+        User findUser = findById(user.getId());
+        if(findUser==null) throw new Exception("User not found");
+        users.remove(findUser);
         users.add(user);
         return user;
     }

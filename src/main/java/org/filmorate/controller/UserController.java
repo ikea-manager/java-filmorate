@@ -2,6 +2,7 @@ package org.filmorate.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import org.filmorate.exceptions.ValidationException;
+import org.filmorate.model.ErrorResponse;
 import org.filmorate.model.User;
 import org.filmorate.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,7 +50,7 @@ public class UserController {
 
     @PutMapping
     @ResponseBody
-    public User put(@RequestBody User user) throws ValidationException {
+    public User put(@RequestBody User user) throws Exception {
         log.info("/users patch");
         this.validate(user);
         return userService.update(user);
@@ -109,13 +110,13 @@ public class UserController {
 
     @ExceptionHandler(ValidationException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public String handleValidationException(ValidationException e) {
-        return e.getMessage();
+    public ErrorResponse handleValidationException(ValidationException e) {
+        return new ErrorResponse(e.getMessage());
     }
 
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public String handleException(Exception e) {
-        return e.getMessage();
+    public ErrorResponse handleException(Exception e) {
+        return new ErrorResponse(e.getMessage());
     }
 }

@@ -31,7 +31,7 @@ public class FilmService {
         return storage.insert(film);
     }
 
-    public Film update(Film film){
+    public Film update(Film film) throws Exception {
         return storage.update(film);
     }
 

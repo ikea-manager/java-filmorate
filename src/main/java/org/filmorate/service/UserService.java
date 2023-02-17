@@ -30,7 +30,7 @@ public class UserService {
         return storage.insert(user);
     }
 
-    public User update(User user){
+    public User update(User user) throws Exception {
         return storage.update(user);
     }
 

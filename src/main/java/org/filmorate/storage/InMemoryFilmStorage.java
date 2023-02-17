@@ -29,8 +29,10 @@ public class InMemoryFilmStorage implements FilmStorage{
     }
 
     @Override
-    public Film update(Film film) {
-        films.remove(this.findById(film.getId()));
+    public Film update(Film film) throws Exception {
+        Film findFilm = this.findById(film.getId());
+        if(findFilm==null) throw new Exception("Film not found");
+        films.remove(findFilm);
         films.add(film);
         return film;
     }
