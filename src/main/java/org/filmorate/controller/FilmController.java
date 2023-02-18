@@ -59,9 +59,9 @@ public class FilmController {
         filmService.removeLike(id, userId);
     }
 
-    @GetMapping("/popular?count={count}")
+    @GetMapping(value = "/popular")
     @ResponseBody
-    public List<Film> getTop(@PathVariable Integer count) {
+    public List<Film> getTop(@RequestParam(defaultValue = "10") Integer count) {
         log.info("/films get top");
         return filmService.getTopNFilms(count);
     }

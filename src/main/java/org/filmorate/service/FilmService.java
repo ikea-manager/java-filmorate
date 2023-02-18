@@ -5,10 +5,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.filmorate.exceptions.ValidationException;
 import org.filmorate.model.Film;
 import org.filmorate.storage.FilmStorage;
+import org.filmorate.storage.UserStorage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
@@ -20,6 +22,7 @@ public class FilmService {
     private static final LocalDate MIN_RELEASE_DATE = LocalDate.of(1895, 12, 28);
 
     private final FilmStorage storage;
+    private final UserStorage userStorage;
 
     public List<Film> getAll(){
         return storage.findAll();
@@ -44,13 +47,15 @@ public class FilmService {
     }
 
     public void removeLike(Long id, Long userId){
+        userStorage.findById(userId);
         this.getById(id).getLikes().remove(userId);
     }
 
     public List<Film> getTopNFilms(Integer count){
         List<Film> films = this.getAll();
-        films.sort(Comparator.comparingInt(film -> film.getLikes().size()));
-        return films.subList(0, count==null?10:count);
+        if (films.isEmpty()) return films;
+        Collections.reverse(films);
+        return films.subList(0, Math.min(count, films.size()));
     }
 
     private void validate(Film film) {

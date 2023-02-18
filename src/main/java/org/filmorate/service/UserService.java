@@ -2,6 +2,7 @@ package org.filmorate.service;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.filmorate.exceptions.NotFoundException;
 import org.filmorate.exceptions.ValidationException;
 import org.filmorate.model.User;
 import org.filmorate.storage.UserStorage;
@@ -42,11 +43,15 @@ public class UserService {
     }
 
     public void addToFriends(Long id, Long friendId){
+        User user = this.getById(friendId);
         this.getById(id).getFriends().add(friendId);
+        user.getFriends().add(id);
     }
 
     public void removeFromFriends(Long id, Long friendId){
+        User user = this.getById(friendId);
         this.getById(id).getFriends().remove(friendId);
+        user.getFriends().remove(id);
     }
 
     public List<User> getFriends(Long id){
