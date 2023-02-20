@@ -2,11 +2,9 @@ package org.filmorate.service;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.filmorate.exceptions.NotFoundException;
 import org.filmorate.exceptions.ValidationException;
 import org.filmorate.model.User;
 import org.filmorate.storage.UserStorage;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -24,15 +22,15 @@ public class UserService {
 
     private final UserStorage storage;
 
-    public List<User> getAll(){
+    public List<User> getAll() {
         return storage.findAll();
     }
 
-    public User getById(Long id){
+    public User getById(Long id) {
         return storage.findById(id);
     }
 
-    public User add(User user){
+    public User add(User user) {
         this.validate(user);
         return storage.insert(user);
     }
@@ -42,30 +40,30 @@ public class UserService {
         return storage.update(user);
     }
 
-    public void addToFriends(Long id, Long friendId){
+    public void addToFriends(Long id, Long friendId) {
         User user = this.getById(friendId);
         this.getById(id).getFriends().add(friendId);
         user.getFriends().add(id);
     }
 
-    public void removeFromFriends(Long id, Long friendId){
+    public void removeFromFriends(Long id, Long friendId) {
         User user = this.getById(friendId);
         this.getById(id).getFriends().remove(friendId);
         user.getFriends().remove(id);
     }
 
-    public List<User> getFriends(Long id){
+    public List<User> getFriends(Long id) {
         return this.getById(id).getFriends().stream().map(this::getById).collect(Collectors.toList());
     }
 
-    public Set<User> findCommonFriends(Long id, Long otherId){
+    public Set<User> findCommonFriends(Long id, Long otherId) {
         Set<Long> intersection = new HashSet<>(this.getById(id).getFriends());
         intersection.retainAll(this.getById(otherId).getFriends());
         return intersection.stream().map(this::getById).collect(Collectors.toSet());
     }
 
     private void validate(User user) {
-        if (user.getEmail()==null||user.getEmail().isEmpty()) {
+        if (user.getEmail() == null || user.getEmail().isEmpty()) {
             log.error("Email не может быть пустым");
             throw new ValidationException("Email не может быть пустым");
         }
@@ -73,7 +71,7 @@ public class UserService {
             log.error("Email должен содержать символ @");
             throw new ValidationException("Email должен содержать символ @");
         }
-        if (user.getLogin()==null||user.getLogin().isEmpty()) {
+        if (user.getLogin() == null || user.getLogin().isEmpty()) {
             log.error("Login не может быть пустым");
             throw new ValidationException("Login не может быть пустым");
         }
@@ -81,8 +79,8 @@ public class UserService {
             log.error("Login не может содержать пробелы");
             throw new ValidationException("Login не может содержать пробелы");
         }
-        if (user.getName()==null||user.getName().isEmpty()) user.setName(user.getLogin());
-        if (user.getBirthday()!=null && user.getBirthday().isAfter(LocalDate.now())) {
+        if (user.getName() == null || user.getName().isEmpty()) user.setName(user.getLogin());
+        if (user.getBirthday() != null && user.getBirthday().isAfter(LocalDate.now())) {
             log.error("Birthday не может быть в будущем");
             throw new ValidationException("Birthday не может быть в будущем");
         }

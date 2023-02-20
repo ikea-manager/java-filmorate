@@ -17,12 +17,13 @@ public class FilmControllerTest {
     @Autowired
     FilmController filmController;
     Film film = new Film();
+
     @BeforeEach
     public void setUp() {
         film.setId(1);
         film.setName("Название");
         film.setDescription("Описание");
-        film.setReleaseDate(LocalDate.of(1990,1,1));
+        film.setReleaseDate(LocalDate.of(1990, 1, 1));
         film.setDuration(120L);
     }
 
@@ -55,7 +56,7 @@ public class FilmControllerTest {
 
     @Test
     public void validationFilmPutTest_ValidationException_MinReleaseDate() throws ValidationException {
-        film.setReleaseDate(LocalDate.of(1895,1,1));
+        film.setReleaseDate(LocalDate.of(1895, 1, 1));
         Exception exception = assertThrows(ValidationException.class, () -> {
             filmController.post(film);
         });

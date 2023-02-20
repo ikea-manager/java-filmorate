@@ -6,11 +6,11 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 @Component
-public class InMemoryUserStorage implements UserStorage{
+public class InMemoryUserStorage implements UserStorage {
     private final List<User> users = new ArrayList<>();
+
     @Override
     public List<User> findAll() {
         return users;
@@ -18,8 +18,8 @@ public class InMemoryUserStorage implements UserStorage{
 
     @Override
     public User findById(Long id) {
-        User usr = users.stream().filter(user->user.getId()==id).findFirst().orElse(null);
-        if(usr==null) throw new NotFoundException("User not found");
+        User usr = users.stream().filter(user -> user.getId() == id).findFirst().orElse(null);
+        if (usr == null) throw new NotFoundException("User not found");
         return usr;
     }
 

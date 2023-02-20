@@ -24,7 +24,7 @@ public class UserControllerTest {
         user.setName("Название");
         user.setLogin("login");
         user.setEmail("email@mail.com");
-        user.setBirthday(LocalDate.of(1990,1,1));
+        user.setBirthday(LocalDate.of(1990, 1, 1));
     }
 
     @Test
