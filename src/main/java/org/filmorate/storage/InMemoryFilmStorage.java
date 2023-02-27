@@ -8,8 +8,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class InMemoryFilmStorage implements FilmStorage{
+public class InMemoryFilmStorage implements FilmStorage {
     private final List<Film> films = new ArrayList<>();
+
     @Override
     public List<Film> findAll() {
         return films;
@@ -17,8 +18,8 @@ public class InMemoryFilmStorage implements FilmStorage{
 
     @Override
     public Film findById(Long id) {
-        Film flm = films.stream().filter(film->film.getId()==id).findFirst().orElse(null);
-        if(flm==null) throw new NotFoundException("Film not found");
+        Film flm = films.stream().filter(film -> film.getId() == id).findFirst().orElse(null);
+        if (flm == null) throw new NotFoundException("Film not found");
         return flm;
     }
 

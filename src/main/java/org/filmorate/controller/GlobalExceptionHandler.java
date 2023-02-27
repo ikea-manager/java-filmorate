@@ -1,5 +1,6 @@
 package org.filmorate.controller;
 
+import org.filmorate.exceptions.NotFoundException;
 import org.filmorate.exceptions.ValidationException;
 import org.filmorate.model.ErrorResponse;
 import org.springframework.http.HttpStatus;
@@ -14,6 +15,11 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(ValidationException.class)
     public ResponseEntity<Object> handleValidationException(ValidationException e, WebRequest request) {
         return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity<Object> handleNotFoundException(NotFoundException e, WebRequest request) {
+        return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(Exception.class)
