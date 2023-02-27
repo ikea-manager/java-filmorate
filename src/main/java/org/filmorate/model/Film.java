@@ -3,6 +3,7 @@ package org.filmorate.model;
 import lombok.Data;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -18,5 +19,5 @@ public class Film {
     private Set<Long> likes = new HashSet<>();
     private int rate;
     private Mpa mpa;
-    private List<Genre> genres;
+    private List<Genre> genres = new ArrayList<>();
 }

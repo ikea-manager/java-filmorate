@@ -41,15 +41,21 @@ public class UserService {
     }
 
     public void addToFriends(Long id, Long friendId) {
-        User user = this.getById(friendId);
-        this.getById(id).getFriends().add(friendId);
-        user.getFriends().add(id);
+        //User user = this.getById(friendId);
+        User user = getById(id);
+        User friend = getById(friendId);
+        user.getFriends().add(friendId);
+        update(user);
+        //user.getFriends().add(id);
     }
 
     public void removeFromFriends(Long id, Long friendId) {
-        User user = this.getById(friendId);
-        this.getById(id).getFriends().remove(friendId);
-        user.getFriends().remove(id);
+        //User user = this.getById(friendId);
+        User user = getById(id);
+        User friend = getById(friendId);
+        user.getFriends().remove(friendId);
+        update(user);
+        //user.getFriends().remove(id);
     }
 
     public List<User> getFriends(Long id) {
