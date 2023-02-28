@@ -41,21 +41,17 @@ public class UserService {
     }
 
     public void addToFriends(Long id, Long friendId) {
-        //User user = this.getById(friendId);
         User user = getById(id);
         User friend = getById(friendId);
         user.getFriends().add(friendId);
         update(user);
-        //user.getFriends().add(id);
     }
 
     public void removeFromFriends(Long id, Long friendId) {
-        //User user = this.getById(friendId);
         User user = getById(id);
         User friend = getById(friendId);
         user.getFriends().remove(friendId);
         update(user);
-        //user.getFriends().remove(id);
     }
 
     public List<User> getFriends(Long id) {

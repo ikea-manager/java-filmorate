@@ -20,11 +20,11 @@ import java.util.List;
 @Slf4j
 @Component("MpaDbStorage")
 @AllArgsConstructor
-public class MpaDbStorage implements MpaStorage{
+public class MpaDbStorage implements MpaStorage {
 
     private JdbcTemplate jdbcTemplate;
 
-    private final RowMapper<Mpa> rowMapper = new RowMapper(){
+    private final RowMapper<Mpa> rowMapper = new RowMapper() {
         @Override
         public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
             Mpa mpa = new Mpa();
@@ -43,7 +43,7 @@ public class MpaDbStorage implements MpaStorage{
     public Mpa findById(Long id) {
         try {
             return jdbcTemplate.queryForObject("SELECT id, name FROM MPA WHERE id=?", new Object[]{id}, rowMapper);
-        }catch(DataAccessException e) {
+        } catch (DataAccessException e) {
             throw new NotFoundException("Mpa not found");
         }
     }

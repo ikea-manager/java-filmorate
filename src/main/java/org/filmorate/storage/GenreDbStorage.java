@@ -20,11 +20,11 @@ import java.util.List;
 @Slf4j
 @Component("GenreDbStorage")
 @AllArgsConstructor
-public class GenreDbStorage implements GenreStorage{
+public class GenreDbStorage implements GenreStorage {
 
     private JdbcTemplate jdbcTemplate;
 
-    private final RowMapper<Genre> rowMapper = new RowMapper(){
+    private final RowMapper<Genre> rowMapper = new RowMapper() {
         @Override
         public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
             Genre genre = new Genre();
@@ -41,14 +41,14 @@ public class GenreDbStorage implements GenreStorage{
 
     @Override
     public List<Genre> findByFilm(long filmId) {
-        return  jdbcTemplate.query("SELECT id, name FROM GENRES, FILMGENRES WHERE FILMGENRES.genreId=GENRES.id AND FILMGENRES.filmId=?", new Object[]{filmId}, rowMapper);
+        return jdbcTemplate.query("SELECT id, name FROM GENRES, FILMGENRES WHERE FILMGENRES.genreId=GENRES.id AND FILMGENRES.filmId=?", new Object[]{filmId}, rowMapper);
     }
 
     @Override
     public Genre findById(Long id) {
         try {
             return jdbcTemplate.queryForObject("SELECT id, name FROM GENRES WHERE id=?", new Object[]{id}, rowMapper);
-        }catch(DataAccessException e) {
+        } catch (DataAccessException e) {
             throw new NotFoundException("Genre not found");
         }
     }
