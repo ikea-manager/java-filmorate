@@ -6,6 +6,8 @@ import org.filmorate.exceptions.ValidationException;
 import org.filmorate.model.Film;
 import org.filmorate.storage.FilmStorage;
 import org.filmorate.storage.UserStorage;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -41,12 +43,17 @@ public class FilmService {
     }
 
     public void addLike(Long id, Long userId) {
-        this.getById(id).getLikes().add(userId);
+        Film film = getById(id);
+        userStorage.findById(userId);
+        film.getLikes().add(userId);
+        update(film);
     }
 
     public void removeLike(Long id, Long userId) {
+        Film film = getById(id);
         userStorage.findById(userId);
-        this.getById(id).getLikes().remove(userId);
+        film.getLikes().remove(userId);
+        update(film);
     }
 
     public List<Film> getTopNFilms(Integer count) {
